@@ -291,8 +291,8 @@ static ExitData *createExitData(const MQCHAR *sMsgUserData, const MQCHAR* sChann
 		LOG(pResult,"+--------------------------------------------------------------+\n");
 		LOG(pResult,"| Message Channel Exit by www.invenireaude.com                 |\n");
 		LOG(pResult,"+--------------------------------------------------------------+\n");
-		LOG(pResult,"| Version: %10s                                         |\n", IAE_VERSION );
-		LOG(pResult,"| More info: http://www.invenireaude.com/article;id=exits.cc   |\n");
+		LOG(pResult,"| Version: %10s                                                  |\n", IAE_VERSION );
+		LOG(pResult,"| More info: http://www.invenireaude.com/article;id=exits.chfl   |\n");
 		LOG(pResult,"+--------------------------------------------------------------+\n\n");
 		LOG(pResult,"Exit Initialized for the [%s] channel, parameters are [%s].\n", pResult->sChannelName, pResult->sMsgUserData);
 	}
