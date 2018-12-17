@@ -1,0 +1,24 @@
+include Makefile
+
+CC=/opt/albert/cross/powerpc-ibm-aix6.1/bin/powerpc-ibm-aix6.1-gcc
+CCDEPSCMD=/opt/albert/cross/powerpc-ibm-aix6.1/bin/powerpc-ibm-aix6.1-gcc -MM -MG
+
+CFLAGS+=  -fPIC -maix64 -mno-mfcrf -fno-builtin
+LNFLAGS+= -fPIC -fno-builtin
+
+LNLIBS+= -Lout/lib -l$(THELIB)
+
+LNEXITFLAGS+=-shared
+
+CFLAGS+= -I/opt/mqm/inc -Isrc
+
+$(EXE) : out/bin/% : src/%.c 
+	@echo Creating project artifact: $@
+	@$(CC) $(CFLAGS) $(LNFLAGS) -o $@ $^ 
+
+$(EXIT) : out/exit/% : src/%.c 
+	@echo Creating project artifact: $@
+	@$(CC) $(CFLAGS) $(LNFLAGS) $(LNEXITFLAGS) -o $@ $^ 
+
+
+		

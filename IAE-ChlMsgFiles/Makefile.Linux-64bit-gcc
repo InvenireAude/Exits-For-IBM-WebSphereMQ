@@ -1,0 +1,22 @@
+include Makefile
+
+CC=gcc
+
+CFLAGS+=  -m64 -fPIC -g 
+LNFLAGS+= -m64 -fPIC
+CCDEPSCMD=gcc -MM -MG
+
+LNEXITFLAGS+=-shared
+
+CFLAGS+= -I/opt/mqm/inc -Isrc
+
+$(EXE) : out/bin/% : src/%.c 
+	@echo Creating project artifact: $@
+	@$(CC) $(CFLAGS) $(LNFLAGS) -o $@ $^ 
+
+$(EXIT) : out/exit/% : src/%.c 
+	@echo Creating project artifact: $@
+	@$(CC) $(CFLAGS) $(LNFLAGS) $(LNEXITFLAGS) -o $@ $^ 
+
+
+		

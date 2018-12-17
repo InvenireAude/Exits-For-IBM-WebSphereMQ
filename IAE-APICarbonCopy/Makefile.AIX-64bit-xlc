@@ -1,0 +1,28 @@
+include Makefile
+
+PLATFORM=AIX
+
+CC=/opt/IBM/xlC/13.1.0/bin/xlc
+
+CFLAGS+=
+LNFLAGS+=
+
+OBJECT_MODE=64
+LNEXITFLAGS+=-q64 -e MQStart -bM:SRE -bE:exit.exp
+
+CFLAGS+= -I/usr/mqm/inc -Isrc
+
+$(EXIT32) : out/exits/% : src/%.c
+	@echo Creating project artifact: $@
+	@$(CC) $(CFLAGS) $(CFLAGS32) $(LNFLAGS32) $(LNEXITFLAGS) -o $@ $^
+
+$(EXIT32R) : $(EXIT32)
+	@cp $^ $@
+
+$(EXIT64) : out/exits64/% : src/%.c
+	@echo Creating project artifact: $@
+	@$(CC) $(CFLAGS) $(CFLAGS64) $(LNFLAGS64) $(LNEXITFLAGS) -o $@ $^
+
+$(EXIT64R) : $(EXIT64)
+	@cp $^ $@
+

@@ -1,0 +1,21 @@
+include Makefile
+
+CC=/usr/vac/bin/xlc
+
+CFLAGS+=
+LNFLAGS+=
+
+OBJECT_MODE=64
+LNEXITFLAGS+=-q64 -e MQStart -bM:SRE -bE:exit.exp
+
+CFLAGS+= -I/opt/mqm/inc -Isrc
+
+$(EXE) : out/bin/% : src/%.c
+    @echo Creating project artifact: $@
+    @$(CC) $(CFLAGS) $(LNFLAGS) -o $@ $^
+
+$(EXIT) : out/exit/% : src/%.c
+    @echo Creating project artifact: $@
+    @$(CC) $(CFLAGS) $(LNFLAGS) $(LNEXITFLAGS) -o $@ $^
+
+	
