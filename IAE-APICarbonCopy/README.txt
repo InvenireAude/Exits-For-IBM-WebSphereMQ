@@ -28,28 +28,53 @@ Create the errors and data directories:
 mkdir -p  /var/mqm/iae/errors
 chmod 770 /var/mqm/iae/errors
 chmod +t  /var/mqm/iae/errors
-
-The above directory names are fixed as there are no means to pass so much configuration to the exit. If you would like to have the data saved in other location create the symbolic links, accordingly.
-
-Remember to setup the permissions according to your security policy, the directory must be accessible for MCA users.
-
-This exit does not write any user data (message content) into the error log files.
 Configuration
-In order to actvate the exit, change the channel definition, e.g::
+In order to actvate the exit, create definiton in the queue manager qm.ini file, e.g::
 
+ApiExitLocal:
+  Name=CarbonCopy
+  Sequence=3
+  Function=EntryPoint
+  Module=/var/mqm/exits/iaeapicc
+  Data=D=Y,p=TRC.,A=n
 
---------------------------------------------------------------------
- Parameter 	Description
---------------------------------------------------------------------
-	D 		Specifies the verbosity level.
+The Data string contains coma separated options.
+Parameter	Description
+D	Specifies the verbosity level.
+Y - verbose mode.
+y - Basic information.
+n/N - Quiet - nothing.
+g	Specifies the queue prefix for the MQGET tracing.
+p	Specifies the queue prefix for the MQPUT tracing.
+E	Set expiration to unlimited.
+Y/y - yes.
+n/N - no.
+P	Change presistence (otherwise the orginal setting is used).
+0 - non-presistant trace message.
+1 - presistant trace message.
+2 - as queue default.
+A	Specifies alias base names are to be used.
+Y/y - use the base name.
+n/N - the application provided name.
+If you want to trace only one type of calls, simply do not include the remaining prefix specification.
+Remember that the trace queue must be defined and enabled for the put oprations in order to activate tracing.
 
-    		D - verbose mode.
-    		d - Basic information.
-    		n/N - Quite - nothing.
+Restart the queue anager.
 
-------------------------------------------------------------------
+Verify the AMQERR01.LOG file:
 
+tail -f /var/mqm/qmgrs/ABC/errors/AMQERR01.LOG
+Verify the exit file:
+tail -f /var/mqm/iae/errors/iae.PID.txt
+The error log is composed of the program PID.
+Exit and debuging works with multithreaded programs. However, we do fully not support the IBM WebSphere Message Broker.
 
+Define the trace queue, e.g.:
+ DEF QL(TRC.SERVICE.IN) PUT(DISABLED) MAXDEPTH(50000) MAXMSGL(100000)
+Activate the trace by altering the queue option:
+ ALTER QL(TRC.SERVICE.IN) PUT(ENABLED)
+Remember that the queue should be able to store the trace messages (proper MAXDEPTH) or the backup utility should be configured (e.g. the qload program).
+Storing large number of messages on the queue (> 10000) may yield in the periodic, time consuming queue indexing process (can be observed as the messages AMQERRxx.LOG files).
 
 Compilation (e.g for Linux-64bit)
 =========================================================

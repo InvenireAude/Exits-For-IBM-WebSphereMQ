@@ -28,7 +28,7 @@
 #include <cmqec.h>
 
 /********************************************************************/
-#define IAE_VERSION "1.0.8"
+#define IAE_VERSION "1.1.2"
 #define IAE_FILENAME_LEN 		256
 /*********************************************************************/
 
@@ -522,7 +522,7 @@ void MQENTRY OpenBefore  ( PMQAXP    pExitParms
 	DBG(pExitUserArea," >> \n");
 
 	if(ppObjDesc &&  *ppObjDesc)
-		DBG(pExitUserArea,"calling MQOPEN('%.*s',...) \n",MQ_Q_NAME_LENGTH, (*ppObjDesc)->ObjectName);
+		DBG(pExitUserArea,"calling MQOPEN('%.*s', ObjectType=%d, ...) \n",MQ_Q_NAME_LENGTH, (*ppObjDesc)->ObjectName, (*ppObjDesc)->ObjectType);
 
 
 	if(*(pExitUserArea->sGetPrefix))
@@ -535,7 +535,9 @@ void MQENTRY OpenBefore  ( PMQAXP    pExitParms
 
 	if(*(pExitUserArea->sPutPrefix))
 		if(pOptions)
-				if( (*pOptions & MQOO_OUTPUT)){
+				if( (*pOptions & MQOO_OUTPUT) &&
+            ((*ppObjDesc)->ObjectType != MQOT_TOPIC)
+            ){
 					*pOptions |= MQOO_INQUIRE;
 				}
 
